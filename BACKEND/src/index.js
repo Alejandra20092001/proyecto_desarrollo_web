@@ -1,26 +1,26 @@
 //se incluye el modulo de express
-const express  = require("express");
+import express from "express"
 
 //se invoca el body-parser
-const bodyParser = require("body-parser")
+import bodyParser from "body-parser";
 
 // se invocan los modulos de db
-const {leer, crear, actualizarEstado, actualizarTexto, borrar} = require("./database/db");
+import {leer, crear, actualizarEstado, actualizarTexto, borrar} from "./database/db.js"
 
 // se invoca el express, llamandolo rutas
-const rutas = express();
+const app = express();
 
 //esta constante muestra un mensaje en el que pone error, que aparecera cada vez que haya un error en el sistema
 const msgError = {resultado : "error"};
 
 // para cualquier peticion que entre con content-type
-rutas.use(bodyParser.json())
+app.use(bodyParser.json())
 
 //se vincula la ruta del rutas con la carpeta ..
-//rutas.use("/", express.static(""))
+//app.use("/", express.static(""))
 
 // redirige a esa url diciendo que si es get haga esa funcion , si es post esa funcion y si es put esa funcion
-rutas.route("/api-todo")
+app.route("/api-todo")
 .get(async (peticion, respuesta) => {
     //estas dos variables saldran de leer 
     let [error, gastos] = await leer();
@@ -86,7 +86,7 @@ rutas.route("/api-todo")
 });
 
 //se concatena con la peticion
-rutas.get("/api-todo/:id([0-9]{1,11})", async (peticion, respuesta) => {
+app.get("/api-todo/:id([0-9]{1,11})", async (peticion, respuesta) => {
     //en caso de uqe exista solo puede tener una gasto; en get el resultado devuelve gastos, por eso se poen gastos
     let [error, gastos] = await leer(peticion.params.id);
     //cuando tenga la respuesta; si no tengo error que aparezca gastos que viene de --> callback([null, resultado]); y si no el msgError --> callback([{error : "error en la base de datos"}])
@@ -95,7 +95,7 @@ rutas.get("/api-todo/:id([0-9]{1,11})", async (peticion, respuesta) => {
 });
 
 // 
-rutas.delete("/api-todo/borrar/:id([0-9]{1,11})",async (peticion, respuesta) => {
+app.delete("/api-todo/borrar/:id([0-9]{1,11})",async (peticion, respuesta) => {
     let [error, resultado] = await borrar(peticion.params.id);
     if(!error){
         //se pone en json, si el resultado afecta a las filas y es mayor que 0, es decir se ha producido un cambio; que aprezca "ok" y si no "ko" (que es cuando no hay nada que borrar)
@@ -106,16 +106,16 @@ rutas.delete("/api-todo/borrar/:id([0-9]{1,11})",async (peticion, respuesta) => 
 
 // si a mi rutas se le hace cualquier tipo de peticion que no entre por las anteriores enviamos el mensaje error
 //¡¡CUALQUIER ERROR PASA POR AQUI!!
-rutas.use((error, peticion, respuesta, siguiente) => {
+app.use((error, peticion, respuesta, siguiente) => {
   
     // con el json se convierte en objeto json la respuesta
     respuesta.json(msgError)
 });
 
-rutas.use((peticion, respuesta) => {
+app.use((peticion, respuesta) => {
     // con el json se convierte en objeto json la respuesta
     respuesta.json(msgError)
 });
 
 //el rutas en el puerto 3000
-rutas.listen(3000)
+app.listen(3000)

@@ -1,8 +1,8 @@
 //se incluye el modulo de mysql2
-const mysql = require("mysql2/promise");
+import mysql from "mysql2/promise"
 
 //se crea una funcion para conectarme a la base de datos
-function conectar(){
+export function conectar(){
     //retorna una promesa asincrona, con un callback 
     return new Promise(async callback => {
         try{
@@ -22,15 +22,15 @@ function conectar(){
     });
 };
 
-function leer(id){
+export function leer(id){
     return new Promise( async callback => {
         //se invoca la funcion conectar con las dos posibilidades de error y conexion
         //esta linea intenta conectarse y depende de si conecta o no va hacia if o else 
         let [error, conexion] = await conectar();
 
         if(!error){
-            //se crea el texto de la onsulta
-            let consulta = `SELECT * FROM gasto ${id ? "WHERE id = ?" : "" }`;
+            //se crea el texto de la consulta
+            let consulta = `SELECT gasto.*, usuarios.usuario FROM gasto INNER JOIN usuarios ON (gasto.id_usuario = usuarios.id) ${id ? "WHERE gasto.id = ?" : "" } `;
 
             //se hace la consulta, en el que selecciona la consulta y le dice que si hay id se seleecione y si no qeu sea nulo 
             let [resultado] = await conexion.query(consulta, id ? [id] : null);
@@ -47,7 +47,7 @@ function leer(id){
 
 
 //actualizarEstado solo recibe el id 
-function actualizarEstado(id){
+export function actualizarEstado(id){
     return new Promise( async callback => {
         //se invoca la funcion conectar con las dos posibilidades de error y conexion
         //esta linea intenta conectarse y depende de si conecta o no va hacia if o else 
@@ -69,7 +69,7 @@ function actualizarEstado(id){
 };
 
 //actualizarEstado solo recibe el id 
-function actualizarTexto(id, gasto){
+export function actualizarTexto(id, gasto){
     return new Promise( async callback => {
         //se invoca la funcion conectar con las dos posibilidades de error y conexion
         //esta linea intenta conectarse y depende de si conecta o no va hacia if o else 
@@ -91,7 +91,7 @@ function actualizarTexto(id, gasto){
 };
 
 //borrar solo recibe el id 
-function borrar(id){
+export function borrar(id){
     return new Promise( async callback => {
         //se invoca la funcion conectar con las dos posibilidades de error y conexion
         //esta linea intenta conectarse y depende de si conecta o no va hacia if o else 
@@ -113,7 +113,7 @@ function borrar(id){
 };
 
 //se le pasa el texto de la gasto
-function crear(gasto){
+export function crear(gasto){
     return new Promise( async callback => {
         //se invoca la funcion conectar con las dos posibilidades de error y conexion
         //esta linea intenta conectarse y depende de si conecta o no va hacia if o else 
@@ -135,4 +135,4 @@ function crear(gasto){
 };
 
 //para exportar los modulos
-module.exports = {leer, crear, actualizarEstado, actualizarTexto, borrar}
+//module.exports = {leer, crear, actualizarEstado, actualizarTexto, borrar}
