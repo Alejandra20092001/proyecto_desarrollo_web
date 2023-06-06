@@ -1,12 +1,12 @@
-//se incluye el modulo de mysql2
-import mysql from "mysql2/promise"
+//se incluye el modulo de mysql2, para tener acceso a la base de datos
+import mysql from "mysql2/promise";
 
-//se crea una funcion para conectarme a la base de datos
+//se crea una funcion para poder conectarse a la base de datos
 export function conectar(){
     //retorna una promesa asincrona, con un callback 
     return new Promise(async callback => {
         try{
-            //se crea una constante en la que se tiene uqe esperar a que se cree el mysql
+            //se crea una constante en la que se tiene que esperar a que se cree el mysql
             let conexion = await mysql.createConnection({
                 host : "localhost",
                 user : "root",
@@ -24,27 +24,25 @@ export function conectar(){
 
 export function leer(id){
     return new Promise( async callback => {
-        //se invoca la funcion conectar con las dos posibilidades de error y conexion
-        //esta linea intenta conectarse y depende de si conecta o no va hacia if o else 
+        //se invoca la funcion conectar con las dos posibilidades de error y conexion; de esta forma logra conectarse a la db
         let [error, conexion] = await conectar();
-
+        //si no hay error:
         if(!error){
-            //se crea el texto de la consulta
+            //la variable consulta, selecciona todos los valores de la tabla gasto y cada usuario de la tabla usuarios,  y a su vez de la base de daos gasto. Y une la tabla usuarios, con el id de cada usuario de ambas tablas y se indica que para ello el id tiene que enr un valor
             let consulta = `SELECT gasto.*, usuarios.usuario FROM gasto INNER JOIN usuarios ON (gasto.id_usuario = usuarios.id) ${id ? "WHERE gasto.id = ?" : "" } `;
 
-            //se hace la consulta, en el que selecciona la consulta y le dice que si hay id se seleecione y si no qeu sea nulo 
+            //se hace la consulta, en el que selecciona la consulta y le indica que si hay id se seleccione y si no que ese valor sea nulo 
             let [resultado] = await conexion.query(consulta, id ? [id] : null);
           
-            //se cierra la conexion pq ya se ha usado y esta el resultado
+            //se cierra la conexion porque ya se ha usado y esta el resultado
             conexion.close();
             callback([null, resultado]);
         }else{
-            //si tengo error se cumple la promesa, indicando que hay un error en la base de datos
+            //si tengo error se cumple la promesa,  pero indicando que hay un error en la base de datos
             callback([{error : "error en la base de datos"}])
         }
     });
 };
-
 
 //actualizarEstado solo recibe el id 
 export function actualizarEstado(id){
@@ -134,5 +132,3 @@ export function crear(gasto){
     });
 };
 
-//para exportar los modulos
-//module.exports = {leer, crear, actualizarEstado, actualizarTexto, borrar}
