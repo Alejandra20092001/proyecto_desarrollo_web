@@ -4,6 +4,8 @@ import express from "express"
 //se invoca el body-parser
 import bodyParser from "body-parser";
 
+//se importa la variable route, del archivo de gastos.routes.js
+import sitioRoute from "./routes/gastos.routes.js"
 
 // se invoca el express, llamandolo rutas
 const app = express();
@@ -31,8 +33,8 @@ app.use((peticion, respuesta, siguiente) => {
 // para cualquier peticion que entre con content-type
 app.use(bodyParser.json())
 
-//se vincula la ruta del rutas con la carpeta ..
-//app.use("/", express.static(""))
+//se le indica que la app use la funcion router() 
+app.use(sitioRoute);
 
 
 // si a mi rutas se le hace cualquier tipo de peticion que no entre por las anteriores enviamos el mensaje error

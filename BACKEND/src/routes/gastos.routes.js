@@ -2,7 +2,7 @@
 import { Router } from "express";
 
 //se importan las funciones creadas en la carpeta especificada
-import { obtenerGastos, anadirGastos, actualizarGastos, borrarGastos } from "../controllers/gastos.controllers";
+import { obtenerGastos, anadirGastos, actualizarGastos, borrarGastos } from "../controllers/gastos.controllers.js";
 
 const route = Router();
 
