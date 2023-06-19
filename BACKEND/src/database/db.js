@@ -26,11 +26,16 @@ export function leer(id){
     return new Promise( async callback => {
         //se invoca la funcion conectar con las dos posibilidades de error y conexion; de esta forma logra conectarse a la db
         let [error, conexion] = await conectar();
+
+
+        console.log(error)
         //si no hay error:
         if(!error){
             //la variable consulta, selecciona todos los valores de la tabla gasto y cada usuario de la tabla usuarios,  y a su vez de la base de daos gasto. Y une la tabla usuarios, con el id de cada usuario de ambas tablas y se indica que para ello el id tiene que enr un valor
             let consulta = `SELECT gasto.*, usuarios.usuario FROM gasto INNER JOIN usuarios ON (gasto.id_usuario = usuarios.id) ${id ? "WHERE gasto.id = ?" : "" } `;
 
+            // Debuh de cconsulta
+            console.log("consulta sql es:",consulta)
             //se hace la consulta, en el que selecciona la consulta y le indica que si hay id se seleccione y si no que ese valor sea nulo 
             let [resultado] = await conexion.query(consulta, id ? [id] : null);
           
@@ -111,16 +116,22 @@ export function borrar(id){
 };
 
 //se le pasa el texto de la gasto
-export function crear(gasto){
+export function crear(datos){
     return new Promise( async callback => {
         //se invoca la funcion conectar con las dos posibilidades de error y conexion
         //esta linea intenta conectarse y depende de si conecta o no va hacia if o else 
         let [error, conexion] = await conectar();
 
         if(!error){
+            const gasto = datos.gasto;
+            const cantidad = datos.cantidad;
+            const id_usuario = datos.id_usuario;
+
+            console.log( "datos vaale", datos)
 
             //se hace la consulta, en el que se selecciona la gasto y en (?) iria el texto de la gasto que se incluye con  [gasto]
-            let [resultado] = await conexion.query("INSERT INTO gasto (gasto) VALUES (?)", [gasto]);
+            //NOW() --> obtiene la fecha actual de la base de datos
+            let [resultado] = await conexion.query("INSERT INTO gasto (gasto, cantidad, id_usuario, fecha_gasto) VALUES (?,?,?,NOW() )", [gasto, cantidad, id_usuario]);
           
             //se cierra la conexion pq ya se ha usado y esta el resultado
             conexion.close();

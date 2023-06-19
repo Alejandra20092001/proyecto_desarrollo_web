@@ -13,7 +13,7 @@ const app = express();
 //esta constante muestra un mensaje en el que pone error, que aparecera cada vez que haya un error en el sistema
 const msgError = {resultado : "error"};
 
-
+//con cors, se unen ambos front y back
 app.use((peticion, respuesta, siguiente) => {
     //se mete dentro de una misma constante las rutas tanto del front como del back
     const rutasOriginales = ['http://localhost:5173', 'http://localhost:3000'];
@@ -51,3 +51,4 @@ app.use((peticion, respuesta) => {
 
 //el rutas en el puerto 3000
 app.listen(3000)
+console.log("servidor corriendo en 3000")

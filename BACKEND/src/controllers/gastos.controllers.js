@@ -10,6 +10,7 @@ export const obtenerGastos = async (peticion, respuesta) => {
     //estas dos variables salen de leer. Error hace referencia al primer valor de la funcion leer y gastos al segundo, es decir al resultado 
     let [error, gastos] = await leer();
 
+    const msgError = "hay error a la hora de obtener datos"
     //cuando este la respuesta; si no hay error que aparezcan los gastos, que vienen de --> callback([null, resultado]); y si no el msgError --> callback([{error : "error en la base de datos"}])
     respuesta.json(!error ? gastos : msgError);
 };
@@ -17,11 +18,15 @@ export const obtenerGastos = async (peticion, respuesta) => {
 //se crea la constante anadirGastos, la cual va a hacer una petición al body para obtener el valor que se haya puesto y lo devolvera creando un nuevo gasto
 export const anadirGastos =  async (peticion, respuesta) => {
     //gasto seria el texto, recibimos la informacion
-    let {gasto} = peticion.body;
+
+    const msgError = "hay error a la hora de añadir datos"
+
+    //se envia datos de db.js; concretamente se envia gato, id usuario y cantidad
+    let gasto = peticion.body;
     //va a preguntar el equivalente boolean; si existe gasto y si es trim (elimina los espacios en blanco), y es diferente de vacio (tiene texto) hara la siguiente funcion 
-    if(gasto && gasto.trim() != ""){
+    if(gasto){
         //se crea el gasto una vez ha salido bien la respuesta crear y ha recibido los valores que se han puesto en el body
-        let [error, resultado] = await crear(gasto.trim());
+        let [error, resultado] = await crear(gasto);
         //si no hay error hace esta funcion
         if(!error){
             //si la consulta salio mal que muestre "ko"

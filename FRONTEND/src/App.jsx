@@ -14,11 +14,10 @@ function App() {
   let [gastos, setGasto] = useState([]);
 
   //al usar useEffect se sincroniza el componente con el sistema externo, se le pasan los parametros de configuracion y las dependencias que estaran en un array
- useEffect(() => {
+  useEffect(() => {
     console.log("obteniendo datos para cargar la app")
     //hace una peticion a ajax con el metodo get a la url localhost
-    //setGasto(await ajax("GET", "http://localhost:3000/api"))
-    ajax("GET", "http://localhost:3000/api").then(datos => setGasto(datos))
+    ajax("GET", "http://localhost:3000/api-gasto").then(datos => setGasto(datos))
   }, [])
 
   return (
