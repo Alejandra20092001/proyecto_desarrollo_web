@@ -1,11 +1,13 @@
 //SE CONSTRUYE LA APP
 
 //se importa React de react
-import  React,{ useState, useEffect } from 'react'
+import  React,{ useState, useEffect } from 'react';
 //se importa Formulario del archivo Formulario en el que esta
-import Formulario from "./Formulario"
+import Formulario from "./Formulario";
 //se importa Gasto del archivo Gasto en el que esta
-import Gasto from './Gasto'
+import Gasto from './Gasto';
+import Sesiones from './Sesiones';
+
 //se importa ajax
 import ajax from "./ajax";
 
@@ -22,17 +24,32 @@ function App() {
 
   return (
     <>
+      <header className='bg-blue-500 p-4'>
+          <nav className='container mx-auto flex items-center justify-between text-white'> 
+            <h1 className='text-2xl font-bold'> APP GASTOS </h1>
+            <div>
+              <button className='px-4 py-2 rounded bg-blue-700 hover:bg-blue-600'>
+                inicio sesion
+                <Sesiones />
+              </button>
+              <button className='px-4 py-2 rounded bg-blue-700 hover:bg-blue-600'>
+                Cerrar sesion
+              </button>
+            </div>
+          </nav>
+      </header>
+
       <section>
         <Formulario />
       </section>
       
       <section className="gastos"> 
         {/* se pintaran tantos gastos como haya */}
-        { gastos.map(({ id, gasto, cantidad, pagado, pagar, terminada }) => 
-          <Gasto key={id} id={id} gasto={gasto} cantidad={cantidad} pagado={pagado} pagar={pagar} terminada={terminada} /> 
+        { gastos.map(({ id, gasto, cantidad, id_usuario, fecha_gasto, terminada }) => 
+          <Gasto key={id} id={id} gasto={gasto} cantidad={cantidad} usuario={id_usuario} fecha_gasto = {fecha_gasto} terminada={terminada} /> 
         )}
-
       </section>
+     
     </>
   )
 }

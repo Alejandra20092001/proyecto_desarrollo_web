@@ -14,7 +14,7 @@ function Formulario(){
 
     function enviarFormulario ( evento ) {
         evento.preventDefault();
-        const datos = {"gasto" : gasto, "cantidad" : cantidad, "id_usuario" : usuario}; 
+        const datos = {"gasto" : gasto, "cantidad" : cantidad, "id_usuario" : usuario }; 
         ajax("POST", "http://localhost:3000/api-gasto", datos ).then(resultado => {
             
             console.log("envio formulario",resultado)
