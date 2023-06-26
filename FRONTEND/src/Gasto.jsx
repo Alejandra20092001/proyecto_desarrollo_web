@@ -11,7 +11,7 @@ function Gasto({ id, gasto, cantidad, id_usuario, fecha_gasto, terminada}){
 
             <div className="texto">
                 <h3> {fecha_gasto} </h3>
-                <p> {pagar} debe a {id_usuario} {cantidad} € </p>
+                <p> {id_usuario} ... debe a ... {id_usuario} {cantidad} € </p>
 
                 <button className={`estado ${terminada ? "terminada" : ""} :(` }>
                     <span>

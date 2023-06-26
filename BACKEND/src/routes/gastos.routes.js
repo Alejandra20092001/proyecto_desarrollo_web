@@ -27,10 +27,10 @@ route.get("/api-gasto/:id([0-9]{1,11})", async (peticion, respuesta) => {
 route.delete("/api-gasto/borrar/:id([0-9]{1,11})", borrarGastos);
 
 // si el usuario hace una peticion via get, el servidor realizara la funcion iniciarSesion
-route.get("/api-gasto", inicioSesion);
+route.get("/api-gasto-login", inicioSesion);
 
 // si el usuario hace una peticion via get, el servidor realizara la funcion cerrarSesion
-route.get("/api-gasto", cierreSesion);
+route.get("/api-gasto-login", cierreSesion);
 
 
 //se exportan odos los valores de route

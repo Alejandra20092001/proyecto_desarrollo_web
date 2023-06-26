@@ -125,6 +125,7 @@ export function crear(datos){
             //NOW() --> obtiene la fecha actual de cuando de la base de datos
             let [resultado] = await conexion.query("INSERT INTO gasto (gasto, cantidad, id_usuario, fecha_gasto) VALUES (?,?,?,NOW() )", [gasto, cantidad, id_usuario]);
           
+            
             //se cierra la conexion pq ya se ha usado y esta el resultado
             conexion.close();
             callback([null, resultado]);
@@ -142,24 +143,27 @@ export function iniciarSesion(datos) {
         //se invoca la funcion conectar y depende de si conecta o no va hacia if o else 
         let [error, conexion] = await conectar();
 
-
-        const usuarios = datos.usuario;
-        const password = datos.password;
-
-        //se seleccionan todos los campos de la tabla usuarios y se comprueba que el usuario y la contraseña coincidan
-        let [resultado] = await conexion.query("SELECT * FROM usuarios WHERE id = (usuarios = password) ", [id, usuarios, password]);
+       
         
         // Verifica si se encontro un usuario que tenga tambien la misma contraseña e inicia sesion si salio bien
-        if (resultado.length > 0) {
-            usuarios == datos.usuario && password == datos.password
-            console.log(`Sesión iniciada para ${usuarios}`);
+        if (!error) {
+            const id = datos;
+            const usuarios = datos;
+            const password = datos;
+            //se seleccionan todos los campos de la tabla usuarios y se comprueba que el usuario y la contraseña coincidan
+            let [resultado] = await conexion.query(`SELECT * FROM usuarios WHERE usuario = '${usuarios}' AND password = '${password}'` , [id, usuarios, password]);
+
+            usuarios === password
+            //se cierra la conexion porque ya se ha usado y esta el resultado
+            conexion.close();
+            callback([null, resultado]);
+
+            console.log(`Sesión iniciada para '${usuarios}'`);
         } else {
             console.log("Sesión incorrecta");
         }
 
-        //se cierra la conexion porque ya se ha usado y esta el resultado
-        // conexion.close();
-        callback([null, resultado]);
+       
 
         //si tengo error se cumple la promesa, indicando que hay un error en la base de datos
         callback([{error : "error en la base de datos"}])  
