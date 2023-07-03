@@ -143,7 +143,6 @@ export function iniciarSesion(datos) {
         //se invoca la funcion conectar y depende de si conecta o no va hacia if o else 
         let [error, conexion] = await conectar();
 
-       
         
         // Verifica si se encontro un usuario que tenga tambien la misma contraseña e inicia sesion si salio bien
         if (!error) {

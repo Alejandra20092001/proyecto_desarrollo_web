@@ -12,9 +12,11 @@ function Sesiones({usuarios, password}) {
 
     function enviarSesiones ( evento ) {
         evento.preventDefault();
-        const datos = { usuarios : nombreUsuario, password : passwordUsuario }; 
-        
-        ajax("GET", "http://localhost:3000/api-gasto-login", datos ).then(resultado => {
+
+        const datos = {"usuario" : nombreUsuario, "password" : passwordUsuario }; 
+
+        //usa POST ya que envía los datos que ha escrito el usuario, para combrobar que coincidan con la base de datos
+        ajax("POST", "http://localhost:3000/api-gasto-login", datos).then(resultado => {
             console.log("inicio de sesion",resultado)
         });
     };
@@ -23,23 +25,25 @@ function Sesiones({usuarios, password}) {
         <form onSubmit= {enviarSesiones} >
 
             <div>
-                <h3> introduzca su nombre de usuario </h3>
+                <label> Introduzca su nombre de usuario: </label>
                 <input 
                     type="text" 
                     value= {usuarios} 
-                    placeholder= "Nombre del usuario" 
+                    required
+                    placeholder= "Usuario" 
                     onChange={(evento) => { setUsuario( evento.target.value);}}
                 /> 
-                <h3> introduzca su contraseña </h3>
+                <label> Introduzca su contraseña: </label>
                 <input 
                     type="text" 
                     value= {password} 
-                    placeholder= "Contraseña " 
+                    required
+                    placeholder= "****" 
                     onChange={(evento) => { setPassword( evento.target.value);}}
                 /> 
             </div>
             
-            <input type="submit" value="añadir"  /> 
+            <input type="submit" value="añadir" /> 
             
         </form>
     )

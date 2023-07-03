@@ -17,7 +17,7 @@ function App() {
 
   //al usar useEffect se sincroniza el componente con el sistema externo, se le pasan los parametros de configuracion y las dependencias que estaran en un array
   useEffect(() => {
-    console.log("obteniendo datos para cargar la app")
+    console.log("obteniendo datos para cargar la app. App.js")
     //hace una peticion a ajax con el metodo get a la url localhost
     ajax("GET", "http://localhost:3000/api-gasto").then(datos => setGasto(datos))
   }, [])
