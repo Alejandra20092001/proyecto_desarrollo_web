@@ -2,7 +2,7 @@
 import { Router } from "express";
 
 //se importan las funciones creadas en la carpeta especificada
-import { obtenerGastos, anadirGastos, actualizarGastos, borrarGastos, inicioSesion, cierreSesion } from "../controllers/gastos.controllers.js";
+import { obtenerGastos, anadirGastos, actualizarGastos, borrarGastos, inicioSesion } from "../controllers/gastos.controllers.js";
 
 const route = Router();
 
@@ -29,8 +29,8 @@ route.delete("/api-gasto/borrar/:id([0-9]{1,11})", borrarGastos);
 // si el usuario hace una peticion via get, el servidor realizara la funcion iniciarSesion
 route.get("/api-gasto-login", inicioSesion);
 
-// si el usuario hace una peticion via get, el servidor realizara la funcion cerrarSesion
-route.get("/api-gasto-login", cierreSesion);
+// // si el usuario hace una peticion via get, el servidor realizara la funcion cerrarSesion
+// route.get("/api-gasto-login", cierreSesion);
 
 
 //se exportan odos los valores de route

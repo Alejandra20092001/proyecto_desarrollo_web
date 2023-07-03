@@ -142,62 +142,57 @@ export function iniciarSesion(datos) {
     return new Promise( async callback =>  {
         //se invoca la funcion conectar y depende de si conecta o no va hacia if o else 
         let [error, conexion] = await conectar();
-
         
         // Verifica si se encontro un usuario que tenga tambien la misma contraseña e inicia sesion si salio bien
         if (!error) {
-            const id = datos;
-            const usuarios = datos;
-            const password = datos;
+            const usuario = datos.usuario;
+            const password = datos.password;
             //se seleccionan todos los campos de la tabla usuarios y se comprueba que el usuario y la contraseña coincidan
-            let [resultado] = await conexion.query(`SELECT * FROM usuarios WHERE usuario = '${usuarios}' AND password = '${password}'` , [id, usuarios, password]);
+            let [resultado] = await conexion.query(`SELECT * FROM usuarios WHERE usuario = '${usuario}' AND password = '${password}'` , [usuario, password]);
 
-            usuarios === password
             //se cierra la conexion porque ya se ha usado y esta el resultado
             conexion.close();
             callback([null, resultado]);
 
-            console.log(`Sesión iniciada para '${usuarios}'`);
+            console.log(`Sesión iniciada para '${usuario}'`);
         } else {
             console.log("Sesión incorrecta");
+            //si tengo error se cumple la promesa, indicando que hay un error en la base de datos
+            callback([{error : "error en la base de datos"}])  
         }
 
-       
-
-        //si tengo error se cumple la promesa, indicando que hay un error en la base de datos
-        callback([{error : "error en la base de datos"}])  
     })
 };
 
 //en esta funcion se van a almacenar todos los datos necesarios para qeu el usuario pueda cerrar sesion con su cuenta en la app
-export function cerrarSesion(datos) {
-    return new Promise( async callback =>  {
-        //se invoca la funcion conectar y depende de si conecta o no va hacia if o else 
-        let [error, conexion] = await conectar();
+// export function cerrarSesion(datos) {
+//     return new Promise( async callback =>  {
+//         //se invoca la funcion conectar y depende de si conecta o no va hacia if o else 
+//         let [error, conexion] = await conectar();
 
-        //se crea esta variable con let, ya que asi permite cambios posteriores. Y se usara para iniciar y cerrar una sesion
-        let sesionActual = null;
+//         //se crea esta variable con let, ya que asi permite cambios posteriores. Y se usara para iniciar y cerrar una sesion
+//         let sesionActual = null;
 
-        const usuarios = datos.usuario;
-        const password = datos.password;
+//         const usuarios = datos.usuario;
+//         const password = datos.password;
 
-        //se seleccionan todos los campos de la tabla usuarios y se comprueba que el usuario y la contraseña coincidan
-        let [resultado] = await conexion.query("SELECT * FROM usuarios WHERE usuarios = '${usuario}' AND password = '${password} ", [usuarios, password]);
+//         //se seleccionan todos los campos de la tabla usuarios y se comprueba que el usuario y la contraseña coincidan
+//         let [resultado] = await conexion.query("SELECT * FROM usuarios WHERE usuarios = '${usuario}' AND password = '${password} ", [usuarios, password]);
         
-        //si la sesion actual tiene contenido, no esta vacia, se cerrara la sesion, si no se indicara que la sesion no esta activada
-        if (sesionActual !== null) {
-            console.log(`Se cerró la sesión de ${sesionActual}`);
-            sesionActual = null;
-        } else {
-            console.log("No hay ninguna sesión activa");
-        }
+//         //si la sesion actual tiene contenido, no esta vacia, se cerrara la sesion, si no se indicara que la sesion no esta activada
+//         if (sesionActual !== null) {
+//             console.log(`Se cerró la sesión de ${sesionActual}`);
+//             sesionActual = null;
+//         } else {
+//             console.log("No hay ninguna sesión activa");
+//         }
 
-        //se cierra la conexion porque ya se ha usado y esta el resultado
-        conexion.close();
-        callback([null, resultado]);
+//         //se cierra la conexion porque ya se ha usado y esta el resultado
+//         conexion.close();
+//         callback([null, resultado]);
 
-        //si tengo error se cumple la promesa, indicando que hay un error en la base de datos
-        callback([{error : "error en la base de datos"}])  
-    })
-};
+//         //si tengo error se cumple la promesa, indicando que hay un error en la base de datos
+//         callback([{error : "error en la base de datos"}])  
+//     })
+// };
 

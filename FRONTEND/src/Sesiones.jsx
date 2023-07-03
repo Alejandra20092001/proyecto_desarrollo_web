@@ -4,21 +4,30 @@ import React,{useState} from "react";
 import ajax from "./ajax.js";
 
 //en esta funcion se van a almacenar todos los datos necesarios para qeu el usuario pueda iniciar sesion con su cuenta en la app
-function Sesiones({usuarios, password}) {
+function Sesiones( ) {
 
-    let [nombreUsuario, setUsuario ]= useState("");
+    let [nombreUsuario, setUsuario ] = useState("");
     let [passwordUsuario, setPassword] = useState("");
     
 
-    function enviarSesiones ( evento ) {
+    const enviarSesiones = async (evento) => {
         evento.preventDefault();
 
-        const datos = {"usuario" : nombreUsuario, "password" : passwordUsuario }; 
+        const datos = { nombreUsuario, passwordUsuario }; 
+        console.log(nombreUsuario, passwordUsuario)
 
         //usa POST ya que envía los datos que ha escrito el usuario, para combrobar que coincidan con la base de datos
-        ajax("POST", "http://localhost:3000/api-gasto-login", datos).then(resultado => {
-            console.log("inicio de sesion",resultado)
-        });
+        const conectar =  await (
+            ajax("POST", "http://localhost:3000/api-gasto-login", datos).then(resultado => {
+                datos.nombreUsuario;
+                datos.passwordUsuario;
+                console.log("inicio de sesion",resultado)
+            })
+        )
+        if(conectar) {
+            // Inicio de sesión exitoso
+            console.log("Inicio de sesión exitoso");
+        } 
     };
 
     return (
@@ -28,18 +37,18 @@ function Sesiones({usuarios, password}) {
                 <label> Introduzca su nombre de usuario: </label>
                 <input 
                     type="text" 
-                    value= {usuarios} 
+                    value= {nombreUsuario} 
                     required
                     placeholder= "Usuario" 
-                    onChange={(evento) => { setUsuario( evento.target.value);}}
+                    onChange={(evento) => { setUsuario(evento.target.value);}}
                 /> 
                 <label> Introduzca su contraseña: </label>
                 <input 
-                    type="text" 
-                    value= {password} 
+                    type="password" 
+                    value= {passwordUsuario} 
                     required
                     placeholder= "****" 
-                    onChange={(evento) => { setPassword( evento.target.value);}}
+                    onChange={(evento) => { setPassword(evento.target.value);}}
                 /> 
             </div>
             

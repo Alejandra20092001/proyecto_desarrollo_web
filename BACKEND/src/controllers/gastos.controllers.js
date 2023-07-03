@@ -1,6 +1,6 @@
 
 // se importan los modulos creados en la db
-import {leer, crear, actualizarEstado, actualizarTexto, borrar, iniciarSesion, cerrarSesion} from "../database/db.js"
+import {leer, crear, actualizarEstado, actualizarTexto, borrar, iniciarSesion} from "../database/db.js"
 
 //se invoca el body-parser
 import bodyParser from "body-parser";
@@ -95,19 +95,24 @@ export const borrarGastos = async (peticion, respuesta) => {
 };
 
 export const inicioSesion = async (peticion, respuesta) => {
-    //estas dos variables salen de iniciarSesion 
-    let [error, datos] = await iniciarSesion();
+    //en esta constante se almacenan los datos recibidos del body
+    const {usuario, password} = peticion.body;
 
-    const msgError = "hay error a la hora de obtener datos"
-    //cuando este la respuesta; si no hay error que aparezcan los gastos, que vienen de --> callback([null, resultado]); y si no el msgError --> callback([{error : "error en la base de datos"}])
-    respuesta.json(!error ? datos : msgError);
+    iniciarSesion(usuario, password, (error, resultado) => {
+        if(!error){
+            resultado.json({ sucess: true })
+        }
+        const msgError = "hay error a la hora de obtener datos"
+        //cuando este la respuesta; si no hay error que aparezcan los gastos, que vienen de --> callback([null, resultado]); y si no el msgError --> callback([{error : "error en la base de datos"}])
+        respuesta.json(!error ? datos : msgError);
+    })
 };
 
-export const cierreSesion = async (peticion, respuesta) => {
-    //estas dos variables salen de iniciarSesion 
-    let [error, datos] = await cerrarSesion();
+// export const cierreSesion = async (peticion, respuesta) => {
+//     //estas dos variables salen de iniciarSesion 
+//     let [error, datos] = await cerrarSesion();
 
-    const msgError = "hay error a la hora de obtener datos"
-    //cuando este la respuesta; si no hay error que aparezcan los gastos, que vienen de --> callback([null, resultado]); y si no el msgError --> callback([{error : "error en la base de datos"}])
-    respuesta.json(!error ? datos : msgError);
-};
+//     const msgError = "hay error a la hora de obtener datos"
+//     //cuando este la respuesta; si no hay error que aparezcan los gastos, que vienen de --> callback([null, resultado]); y si no el msgError --> callback([{error : "error en la base de datos"}])
+//     respuesta.json(!error ? datos : msgError);
+// };
