@@ -65,27 +65,7 @@ export function actualizarEstado(id){
     });
 };
 
-//actualizarEstado solo recibe el id 
-export function actualizarTexto(id, gasto){
-    return new Promise( async callback => {
-        //se invoca la funcion conectar con las dos posibilidades de error y conexion
-        //esta linea intenta conectarse y depende de si conecta o no va hacia if o else 
-        let [error, conexion] = await conectar();
 
-        if(!error){
-
-            //se pone primero gasto en [gasto, id] --< para que en el set coja ese parametro ya que si se pone [id, gasto] cogeria primero el id
-            let [resultado] = await conexion.query("UPDATE gasto SET gasto = ? WHERE id = ?", [gasto, id]);
-          
-            //se cierra la conexion pq ya se ha usado y esta el resultado
-            conexion.close();
-            callback([null, resultado]);
-        }else{
-            //si tengo error se cumple la promesa, indicando que hay un error en la base de datos
-            callback([{error : "error en la base de datos"}])
-        }
-    });
-};
 
 //borrar solo recibe el id 
 export function borrar(id){
@@ -137,62 +117,44 @@ export function crear(datos){
 };
 
 
-//en esta funcion se van a almacenar todos los datos necesarios para qeu el usuario pueda iniciar sesion con su cuenta en la app
 export function iniciarSesion(datos) {
     return new Promise( async callback =>  {
         //se invoca la funcion conectar y depende de si conecta o no va hacia if o else 
         let [error, conexion] = await conectar();
-        
-        // Verifica si se encontro un usuario que tenga tambien la misma contraseña e inicia sesion si salio bien
-        if (!error) {
-            const usuario = datos.usuario;
-            const password = datos.password;
-            //se seleccionan todos los campos de la tabla usuarios y se comprueba que el usuario y la contraseña coincidan
-            let [resultado] = await conexion.query(`SELECT * FROM usuarios WHERE usuario = '${usuario}' AND password = '${password}'` , [usuario, password]);
 
-            //se cierra la conexion porque ya se ha usado y esta el resultado
-            conexion.close();
-            callback([null, resultado]);
+        const usuario = datos.nombreUsuario;
+        const password = datos.passwordUsuario;
 
-            console.log(`Sesión iniciada para '${usuario}'`);
-        } else {
-            console.log("Sesión incorrecta");
-            //si tengo error se cumple la promesa, indicando que hay un error en la base de datos
-            callback([{error : "error en la base de datos"}])  
+        let [resultado] = await conexion.query(`SELECT * FROM usuarios WHERE usuario = '${usuario}' AND password = '${password}'` , [usuario, password]);
+        console.log(datos.body)
+
+        if(resultado.length > 0 ){
+            callback([null, resultado])
+        }else{
+            callback([{error: "error de usuario y/o clave"}, null])
         }
 
     })
 };
 
-//en esta funcion se van a almacenar todos los datos necesarios para qeu el usuario pueda cerrar sesion con su cuenta en la app
-// export function cerrarSesion(datos) {
-//     return new Promise( async callback =>  {
-//         //se invoca la funcion conectar y depende de si conecta o no va hacia if o else 
-//         let [error, conexion] = await conectar();
 
-//         //se crea esta variable con let, ya que asi permite cambios posteriores. Y se usara para iniciar y cerrar una sesion
-//         let sesionActual = null;
+export function leerUsuarios(){
+    return new Promise( async callback => {
+        //se invoca la funcion conectar con las dos posibilidades de error y conexion; de esta forma logra conectarse a la db
+        let [error, conexion] = await conectar();
 
-//         const usuarios = datos.usuario;
-//         const password = datos.password;
+        //si no hay error:
+        if(!error){
+            let consulta = `SELECT id, usuario FROM usuarios `;
 
-//         //se seleccionan todos los campos de la tabla usuarios y se comprueba que el usuario y la contraseña coincidan
-//         let [resultado] = await conexion.query("SELECT * FROM usuarios WHERE usuarios = '${usuario}' AND password = '${password} ", [usuarios, password]);
-        
-//         //si la sesion actual tiene contenido, no esta vacia, se cerrara la sesion, si no se indicara que la sesion no esta activada
-//         if (sesionActual !== null) {
-//             console.log(`Se cerró la sesión de ${sesionActual}`);
-//             sesionActual = null;
-//         } else {
-//             console.log("No hay ninguna sesión activa");
-//         }
-
-//         //se cierra la conexion porque ya se ha usado y esta el resultado
-//         conexion.close();
-//         callback([null, resultado]);
-
-//         //si tengo error se cumple la promesa, indicando que hay un error en la base de datos
-//         callback([{error : "error en la base de datos"}])  
-//     })
-// };
-
+            let [resultado] = await conexion.query(consulta);
+          
+            //se cierra la conexion porque ya se ha usado y esta el resultado
+            conexion.close();
+            callback([null, resultado]);
+        }else{
+            //si tengo error se cumple la promesa,  pero indicando que hay un error en la base de datos
+            callback([{error : "error en obtener usuarios"}])
+        }
+    });
+};

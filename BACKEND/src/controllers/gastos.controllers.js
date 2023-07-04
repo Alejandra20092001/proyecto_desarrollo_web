@@ -1,6 +1,6 @@
 
 // se importan los modulos creados en la db
-import {leer, crear, actualizarEstado, actualizarTexto, borrar, iniciarSesion} from "../database/db.js"
+import {leer, crear, actualizarEstado, borrar, iniciarSesion, leerUsuarios} from "../database/db.js"
 
 //se invoca el body-parser
 import bodyParser from "body-parser";
@@ -45,42 +45,7 @@ export const anadirGastos =  async (peticion, respuesta) => {
     respuesta.json(msgError);
 };
 
-//se crea la constante actualizarGastos
-export const actualizarGastos = async (peticion, respuesta)=> {
-    //se envia datos de db.js; concretamente se envia gasto,es decir el id, usuario y cantidad
-    let gasto = peticion.body;
 
-    //con las expresiones regulares se crean patrones para que solo sean validos los valores con esas caracteristicas 
-    //1º  nos aseguramos si existe el id y la operacion, y que no sea undefinded. 
-    //2º  /^[0-9]{1,11}$/.test(id)  --> al poner esto se confirma que se convierte en un numero entero
-    //3º  /^(1|2)$/.test(operacion) --> al poner esto solo permite que se pueda pasar por el 1 o el 2 (es decir la operacion 1 o la 2)
-    if(id && /^[0-9]{1,11}$/.test(id) && operacion && /^(1|2)$/.test(operacion)){
-        //se crea una variable que recibe las funciones actualizarEstado y actualizarTexto, por eso se han metido dentro de un array, permitiendo asi que ambas funciones esten dentro de la misma variable
-        let operaciones = [actualizarEstado, actualizarTexto]
-        let hacerConsulta = true;
-
-        //se confirma que operacion es un numero
-        operacion = parseInt(operacion)
-        //si operacion es igual a 2, realizará lo indicado dentro
-        if(operacion == 2){
-            // tiene que estar gasto y no puede que venir un string vacio, es decir que tiene que tener texto; y si eso no encaja hacerconsulta pasa a ser false
-            hacerConsulta = gasto && gasto != "";
-        }
-        if(hacerConsulta){
-            //se crea una variable con los valores de error y resultado, dentro de un array. La variable operaciones recibira los valores de la operacion que pueden ser 1 o 2 y en funcion de ello seleccionara actualizarEstado o actualizarTexto
-            //operaciones[operacion - 1] -->  si pasa la 1º operacion: operaciones[1 -1], quedando operaciones[0] y coge el actualizarEstado
-            //operaciones[operacion - 1] -->  si pasa la 2º operacion: operaciones[2 -1], quedando operaciones[1] y coge el actualizarTexto
-            let [error, resultado] = await operaciones[operacion - 1](id, operacion == 2 ? gasto : null);
-
-            //si no hay error y todo salio bien, retornara la respuesta en formato json, indicando a resultado qeu cambie las filas si es mayor que 0 y muestre "ok" y si no mostrará "ko"
-            if(!error){
-                return respuesta.json({resultado : resultado.changedRows > 0 ? "ok" : "ko"})
-            };
-        };
-    };
-    //si no se cumple con esas expresiones regulares aparecera el msgError
-    return respuesta.json(msgError)
-};
 
 //se crea la contante borrarGastos, la cual permite eliminar los gastos, para ello elminina directamene el id de ese gasto de esa forma se borran todos los datos relacionados a el
 export const borrarGastos = async (peticion, respuesta) => {
@@ -94,25 +59,15 @@ export const borrarGastos = async (peticion, respuesta) => {
     respuesta.json(msgError);
 };
 
-export const inicioSesion = async (peticion, respuesta) => {
-    //en esta constante se almacenan los datos recibidos del body
-    const {usuario, password} = peticion.body;
 
-    iniciarSesion(usuario, password, (error, resultado) => {
-        if(!error){
-            resultado.json({ sucess: true })
-        }
-        const msgError = "hay error a la hora de obtener datos"
-        //cuando este la respuesta; si no hay error que aparezcan los gastos, que vienen de --> callback([null, resultado]); y si no el msgError --> callback([{error : "error en la base de datos"}])
-        respuesta.json(!error ? datos : msgError);
-    })
+export const inicioSesion = async (peticion, respuesta) => {
+    let [error, datos] = await iniciarSesion(peticion.body);
+
+    respuesta.json(!error ? datos : error);
 };
 
-// export const cierreSesion = async (peticion, respuesta) => {
-//     //estas dos variables salen de iniciarSesion 
-//     let [error, datos] = await cerrarSesion();
+export const obtenerUsuarios = async (peticion, respuesta) => {
+    let [error, datos] = await leerUsuarios();
 
-//     const msgError = "hay error a la hora de obtener datos"
-//     //cuando este la respuesta; si no hay error que aparezcan los gastos, que vienen de --> callback([null, resultado]); y si no el msgError --> callback([{error : "error en la base de datos"}])
-//     respuesta.json(!error ? datos : msgError);
-// };
+    respuesta.json(!error ? datos : error);
+};

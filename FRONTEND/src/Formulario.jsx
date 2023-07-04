@@ -1,6 +1,6 @@
 
 //se importa react
-import React, {useState} from "react"; 
+import React, {useState, useEffect} from "react"; 
 
 import ajax from "./ajax.js";
 
@@ -10,17 +10,47 @@ function Formulario(){
     let [gasto, setGasto] = useState("");
     let [cantidad, setCantidad] = useState("");
     let [usuario, setUsuario ]= useState("");
+
+
+    let [usuarios, setUsuarios ]= useState([]);
     
 
     function enviarFormulario ( evento ) {
         evento.preventDefault();
-        const datos = {"gasto" : gasto, "cantidad" : cantidad, "id_usuario" : usuario }; 
+        const datos = {
+            "gasto" : gasto, 
+            "cantidad" : cantidad, 
+            "id_usuario" : usuario 
+        }; 
+        if(gasto.length < 3 ){
+            alert("Escribe el gasto mas detallado ");
+            return;
+        }
+        if(cantidad.length < 1 ){
+            alert("Indica el coste del gasto");
+            return;
+        }
+        if(usuario.length < 1 ){
+            alert("Selecciona un usuario");
+            return;
+        }
+
         ajax("POST", "http://localhost:3000/api-gasto", datos ).then(resultado => {
             
             console.log("envio formulario",resultado)
         })
     }
 
+    useEffect(() => {
+        const getUsuarios=async ()=>{
+            ajax("GET", "http://localhost:3000/api-gasto-usuarios")
+            .then(datos => {
+                console.log("usaurios es",datos)
+                setUsuarios(datos)        
+            })
+        }
+        getUsuarios();
+    }, [])
 
     return (
         <form onSubmit= {enviarFormulario} >
@@ -48,17 +78,23 @@ function Formulario(){
             
             
             <div>
-                <h3> Lo pagó: {usuario} </h3>
+                <h3> Lo pagó:  </h3>
                 <label >terminar programar</label>
 
                 <select 
                     name="usuario" 
                     onChange={(evento) => { setUsuario( evento.target.value) }}    
                 >
+                    
                     <option value="0"  > selecciome usuario</option>
-                    <option value="1">Lura</option>
-                    <option value="2" >Juan</option>
-                    <option value="3">Enrique</option>
+                    <option value="1"  > juan </option>
+                    <option value="2"  > pepe </option>
+
+                    { 
+                        usuarios.map( (user) => {
+                            <option value=" "> {user.usuario} </option>
+                        })
+                    }
                 </select>
 
             </div>

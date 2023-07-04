@@ -9,6 +9,7 @@ function Sesiones( ) {
     let [nombreUsuario, setUsuario ] = useState("");
     let [passwordUsuario, setPassword] = useState("");
     
+  let [iniciarSesion, setIniciarSesion] = useState("false");
 
     const enviarSesiones = async (evento) => {
         evento.preventDefault();
@@ -16,14 +17,27 @@ function Sesiones( ) {
         const datos = { nombreUsuario, passwordUsuario }; 
         console.log(nombreUsuario, passwordUsuario)
 
-        //usa POST ya que envía los datos que ha escrito el usuario, para combrobar que coincidan con la base de datos
+        //usa POST ya que envía los datos que ha escrito el usuario, para comprobar que coincidan con la base de datos
         const conectar =  await (
             ajax("POST", "http://localhost:3000/api-gasto-login", datos).then(resultado => {
-                datos.nombreUsuario;
-                datos.passwordUsuario;
-                console.log("inicio de sesion",resultado)
+                // datos.nombreUsuario;
+                // datos.passwordUsuario;
+
+
+            
+                //si el resultaod es ,ayor a 0, es decir coincide el usuario con la contraseña 
+                if(resultado.length > 0){
+                    setIniciarSesion("true");
+                    console.log("sesion iniciada")
+
+                    //guarda en el cliente el estado de la sesion
+                    localStorage.setItem("iniciarSesion", "true");
+                }else{
+                    
+                    console.log("sesion incorrecta")
+                }
             })
-        )
+        );
         if(conectar) {
             // Inicio de sesión exitoso
             console.log("Inicio de sesión exitoso");
@@ -52,7 +66,7 @@ function Sesiones( ) {
                 /> 
             </div>
             
-            <input type="submit" value="añadir" /> 
+            <input type="submit" value="Iniciar sesion" /> 
             
         </form>
     )

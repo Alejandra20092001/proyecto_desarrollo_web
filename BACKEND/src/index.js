@@ -11,7 +11,7 @@ import sitioRoute from "./routes/gastos.routes.js"
 const app = express();
 
 //esta constante muestra un mensaje en el que pone error, que aparecera cada vez que haya un error en el sistema
-const msgError = {resultado : "error"};
+const msgError = {resultado : "errorrr"};
 
 //con cors, se unen ambos front y back
 app.use((peticion, respuesta, siguiente) => {
