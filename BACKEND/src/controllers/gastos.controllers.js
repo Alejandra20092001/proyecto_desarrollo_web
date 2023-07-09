@@ -45,8 +45,6 @@ export const anadirGastos =  async (peticion, respuesta) => {
     respuesta.json(msgError);
 };
 
-
-
 //se crea la contante borrarGastos, la cual permite eliminar los gastos, para ello elminina directamene el id de ese gasto de esa forma se borran todos los datos relacionados a el
 export const borrarGastos = async (peticion, respuesta) => {
     //la funcion borrar recibe el id del gasto qeu se quiere eliminar
@@ -58,7 +56,6 @@ export const borrarGastos = async (peticion, respuesta) => {
     }
     respuesta.json(msgError);
 };
-
 
 export const inicioSesion = async (peticion, respuesta) => {
     let [error, datos] = await iniciarSesion(peticion.body);

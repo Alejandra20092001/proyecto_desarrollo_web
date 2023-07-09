@@ -65,8 +65,6 @@ export function actualizarEstado(id){
     });
 };
 
-
-
 //borrar solo recibe el id 
 export function borrar(id){
     return new Promise( async callback => {

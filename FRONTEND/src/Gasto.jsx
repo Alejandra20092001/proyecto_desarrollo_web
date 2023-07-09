@@ -1,21 +1,16 @@
 //se importa REACT
-import React,{useState} from "react";
-
-import ajax from "./ajax";
-
-
+import React from "react";
 
 //se crea la funcion llamada Gasto
 function Gasto({ id, gasto, cantidad, usuario, fecha_gasto, onDelete}){
-    // const borrarGasto =  (evento) => {
-    //     const id_gasto = evento.target.value;
-    //     alert(id_gasto)
-        
-    //     ajax("DELETE", "http://localhost:3000/api-gasto/borrar/"+id_gasto).then(resultado => { 
-    //         console.log("dato eliminado");
-    //     });
-    // };
 
+    // Cambiar formato de fecha de Base de Datos a formato local
+    const procesarFecha = (fecha) => {
+        const fechaProcesada = new Date(fecha);
+        return fechaProcesada.toLocaleDateString();
+    }
+
+    // Función de Callback para eliminar un gasto desde App.jsx
     const handleDelete = (item) => {
         onDelete(item)
     } 
@@ -25,16 +20,15 @@ function Gasto({ id, gasto, cantidad, usuario, fecha_gasto, onDelete}){
             <h2 className="visible"> {gasto} </h2>
 
             <div className="texto">
-                <h3> {fecha_gasto} </h3>
+                <h3 className="fecha_gasto"> {procesarFecha(fecha_gasto)} </h3>
                 <p> {usuario} pagó   {cantidad} € </p>
 
                 <button onClick={( ) => handleDelete(id)} value= {id} >
                     <span>
-                        borrar
+                        Pagado
                     </span>
                 </button>
             </div>
-                 
         </div>
     )
 }

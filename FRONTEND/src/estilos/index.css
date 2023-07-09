@@ -1,8 +1,3 @@
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 *{
   margin: 0;
   padding: 0;
@@ -11,111 +6,182 @@
 
 :root{
   /* TIPOGRAFIA */
-  --medio: rgb(236, 218, 196);
-  --claro: rgba(235, 235, 235, 0.834);
+  --font-family: 'Pathway Extreme', sans-serif;
+  --thin: 100;
+  --regular:400;
+  --semibold:600;
+  --bold: 700;
 
+  /* COLORES*/
+  --negro: rgb(20, 19, 19);
+  --blanco: rgb(245, 243, 243);
+  --principal: #736CED; 
+  --secundario: #9F9FED;
 }
 
 
 body{
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: rgb(145, 209, 234);
+  font-family: var(--font-family);
+  /* background-color: var(--negro); */
 }
 
 section{
-  border: 1px solid black;
-  background-color: var(--medio);
+  background-color: var(--secundario);
   margin: 20px;
+  padding: 20px;
 }
 button{
-  border: 1px solid black;
+  border: none;
   padding: 10px;
   cursor: pointer;
+  border-radius: 8px;
+  font-weight: var(--regular);
+  color: var(--negro);
 }
 
-/* FORMULARIO */
-  form {
-      display: grid;
-      margin: 10px;
-      gap: 10px;
+header {
+  background-color: var(--principal);
+  padding: 10px;
+}
+
+input{
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+}
+
+input[type=submit]{
+  transition:  background-color 1s, shadow 1s, color 1s, font-weight 0.5s;
+  cursor: pointer;
+}
+input:hover[type=submit]{
+  background-color: var(--principal);
+  box-shadow:1px 1px 3px var(--blanco);
+  color: var(--blanco);
+  font-weight: bold;
+}
+
+p{
+  font-weight: var(--thin);
+}
+
+/* SESIONES */
+  form.inicioSesion{
+    display: flex;
+    flex-direction: column;
+    align-items:flex-start;
+    gap: 10px;
+  }
+  nav{
+    display: flex;
+    margin: auto; 
+    align-items: center ;
+    justify-content: space-between; 
+    color: var(--negro);
+  }
+  h1{
+    font-size: 2rem; 
+    font-weight: var(--bold); 
+    color: var(--blanco);
+  }
+  
+
+/* FORMULARIO NUEVO GASTO */
+  form.formularioNuevoGasto {
+    display: grid;
+    margin: 20px;
+    gap: 10px;
+    padding: 10px;
+    border: none;
+  }
+  form.formularioNuevoGasto div{
+    padding: 5px;
+  }
+  form.formularioNuevoGasto select{
+    border: none;
+    padding: 3px;
+    border-radius: 8px;
+    color: grey;
   }
 
-  form input[type="text"]{
-      border: none;
-      padding: 3px;
-      border-radius: 8px;
-      border-bottom: 2px dotted rgb(88, 87, 87);
-      background-color:rgba(235, 235, 235, 0.834);
+/* GASTOS */
+  div.gasto{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 10px;
+    padding: 10px;
+    background-color: var(--blanco);
   }
-  form input[type="submit"]{
-      border: none;
-      padding: 3px;
-      border-radius: 8px;
-      transition:  background-color 1s, shadow 1s;
-      cursor: pointer;
-  }
-  form input[type="submit"]:hover{
-      background-color: #ffffff;
-      box-shadow:1px 1px 3px rgb(238, 236, 180);
-  }
-
-
-
-/* FUNCION GASTO */
-  .gasto{
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin: 10px;
+  
+  .gasto h2{
+    font-weight: var(--semibold);
+    font-size: 1rem;
+    border-bottom: 2px solid var(--principal);
   }
 
   .gasto .texto{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 30px;
-      padding: 10px;
-      border: 1px solid black;
-      border-radius: 20px;
-      background-color: rgb(241, 236, 230);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    flex-direction: column;
+    gap: 10px;
   }
 
-  /* BOTON PAGADO */
-      .gasto button{
-          background-color: transparent;
-          padding: 10px;
-          color: #333;
-          border: 1px solid #333;
-          border-radius: 3px;
-          margin-top: 20px;
-          cursor: pointer;
-      }
-      .gasto .estado{
-          width: 50px;
-          height: 20px;
-          border-radius: 10px;
-          border: none;
-          background-color: #222;
-          position: relative; /* para que se mueva el btn */
-      }
-      .gasto .estado span{
-          display: block;
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          background-color: #f00;
-          position: absolute;
-          top:0;
-          left:0;
-          transition: left 0.8s,  background-color 1s, transform 1s;
-      }
-
-  /* marca si esta hecha o no , al cambiar de color y de posicion*/
-  .gasto .terminada span{
-      left: 30px;
-      background-color: #0d0;
-      transform: rotate(360deg);
-      
+  .gasto h3.fecha_gasto{
+    font-weight: var(--thin);
   }
-  .gasto button:not(:last-child){
-      margin-right: 20px;
+
+  .gasto p{
+    font-weight: var(--regular);
+  }
+
+  /* BOTON PAGADO (borra gasto) */
+    .gasto button{
+      background-color: var(--principal);
+      cursor: pointer;
+      color: #f3f0f0;
+    }
+
+
+  /* CREACION DE DISEÑOS RESPONSIVES */
+  /* =============================================================================
+      768px MOVIL
+  =============================================================================*/
+  @media screen and (min-width:768px) {
+    
+  }
+  /* =============================================================================
+      992px TABLET
+  =============================================================================*/
+  @media screen and (min-width:992px) {
+    form.formularioNuevoGasto{
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    form.formularioNuevoGasto input[type=submit]{
+      grid-column: 3;
+    }
+    
+    .gasto .texto{
+      justify-content: space-evenly;
+      align-items: center;
+      flex-direction: row;
+    }
+  }
+  /* =============================================================================
+      1200px ORDENADOR
+  =============================================================================*/
+  @media screen and (min-width:1200px) {
+    form.formularioNuevoGasto{
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+
+    form.formularioNuevoGasto input[type=submit]{
+      grid-column: 4;
+    }
+
+    section.deudaFinal p{
+      text-align: center;
+    }
   }

@@ -1,18 +1,18 @@
-
 //se importa react
 import React, {useState, useEffect} from "react"; 
 
 import ajax from "./ajax.js";
 
 //se crea la funcion formulario. la cual va a contener toda la informacion para su creacion y manejo de los datos
-function Formulario(){
+function Formulario({onCrearGasto}){
 
-    let [gasto, setGasto] = useState("");
-    let [cantidad, setCantidad] = useState("");
-    let [usuario, setUsuario ]= useState("");
+    // Datos del Formulario
+    const [gasto, setGasto] = useState("");
+    const [cantidad, setCantidad] = useState("");
+    const [usuario, setUsuario ]= useState("");
 
-
-    let [usuarios, setUsuarios ]= useState([]);
+    // Lista de Usuarios
+    const [usuarios, setUsuarios ]= useState([]);
     
 
     function enviarFormulario ( evento ) {
@@ -22,22 +22,15 @@ function Formulario(){
             "cantidad" : cantidad, 
             "id_usuario" : usuario 
         }; 
-        if(gasto.length < 3 ){
-            alert("Escribe el gasto mas detallado ");
-            return;
-        }
-        if(cantidad.length < 1 ){
-            alert("Indica el coste del gasto");
-            return;
-        }
-        if(usuario.length < 1 ){
-            alert("Selecciona un usuario");
-            return;
-        }
+
+        // Filtros de validación del formulario
+        if(gasto.length < 3 ){      alert("Escribe el gasto mas detallado ");   return;        }
+        if(cantidad.length < 1 ){   alert("Indica el coste del gasto");         return;        }
+        if(usuario.length < 1 ){    alert("Selecciona un usuario");             return;        }
 
         ajax("POST", "http://localhost:3000/api-gasto", datos ).then(resultado => {
-            
             console.log("envio formulario",resultado)
+            onCrearGasto();
         })
     }
 
@@ -45,7 +38,7 @@ function Formulario(){
         const getUsuarios=async ()=>{
             ajax("GET", "http://localhost:3000/api-gasto-usuarios")
             .then(datos => {
-                console.log("usaurios es",datos)
+                console.log("El usuario registrado es",datos)
                 setUsuarios(datos)        
             })
         }
@@ -53,7 +46,7 @@ function Formulario(){
     }, [])
 
     return (
-        <form onSubmit= {enviarFormulario} >
+        <form onSubmit= {enviarFormulario} className="formularioNuevoGasto">
 
             <div>
                 <h3> Titulo del gasto: </h3>
@@ -79,28 +72,17 @@ function Formulario(){
             
             <div>
                 <h3> Lo pagó:  </h3>
-                <label >terminar programar</label>
-
-                <select 
-                    name="usuario" 
-                    onChange={(evento) => { setUsuario( evento.target.value) }}    
-                >
-                    
-                    <option value="0"  > selecciome usuario</option>
-                    <option value="1"  > juan </option>
-                    <option value="2"  > pepe </option>
-
-                    { 
-                        usuarios.map( (user) => {
-                            <option value=" "> {user.usuario} </option>
-                        })
-                    }
+                <select onChange={(evento) => { setUsuario( evento.target.value) }}
+                    name="usuario" >
+                    <option value="0"> Seleccione un usuario</option>
+                    {usuarios.map((user) => (
+                    <option key={user.id} value={user.id}>{user.usuario}</option>
+                    ))}
                 </select>
-
             </div>
             
             
-            <input type="submit" value="añadir"  /> 
+            <input type="submit" value="Añadir nuevo gasto"  /> 
             
         </form>
     )
