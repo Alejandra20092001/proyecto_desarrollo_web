@@ -1,158 +1,142 @@
-//se incluye el modulo de mysql2, para tener acceso a la base de datos
+//Se importa la biblioteca mysql2/promise, que es una biblioteca de promesas para MySQL. Esto permite conectar y ejecutar consultas en una base de datos MySQL.
 import mysql from "mysql2/promise";
 
-//se crea una funcion para poder conectarse a la base de datos
+//Esta función que esta siendo exportada, se usa para conectarse a una base de datos MySQL. Utiliza la promesa asincrónica para crear una conexión con los parámetros especificados. Si hay un error, se devuelve en el primer elemento del array de callback. Si no hay errores, se devuelve null en el primer elemento del array y la conexión en el segundo elemento.
 export function conectar(){
-    //retorna una promesa asincrona, con un callback 
     return new Promise(async callback => {
         try{
-            //se crea una constante en la que se tiene que esperar a que se cree el mysql
+            //Se crea una constante en la que se indica que tiene que esperar a que se cree la conexion con la base de datos gastos_grupales.
             let conexion = await mysql.createConnection({
                 host : "localhost",
                 user : "root",
                 password : "",
                 database : "gastos_grupales",
             });
-            //se invoca el callback y retorna un array
-            //null seria el error, pero al poner null se deja claro qeu no habra error
             callback([null, conexion]) //[error, conexion]
         }catch(error){
             callback([error]);
-        }
+        };
     });
 };
 
+//Se usa para realizar una consulta a la base de datos. 
 export function leer(id){
     return new Promise( async callback => {
-        //se invoca la funcion conectar con las dos posibilidades de error y conexion; de esta forma logra conectarse a la db
+        //Se invoca la función conectar() para establecer una conexión con la base de datos.
         let [error, conexion] = await conectar();
 
-        //si no hay error:
+        //En caso de que no haya error:
         if(!error){
-            //la variable consulta, selecciona todos los valores de la tabla gasto y cada usuario de la tabla usuarios,  y a su vez de la base de daos gasto. Y une la tabla usuarios, con el id de cada usuario de ambas tablas y se indica que para ello el id tiene que enr un valor
+            //Se crea una variable llamada consulta, que selecciona todos los valores de la tabla gasto y cada usuario de la tabla usuarios, y une las dos tablas mediante el id de cada usuario.
             let consulta = `SELECT gasto.*, usuarios.usuario FROM gasto INNER JOIN usuarios ON (gasto.id_usuario = usuarios.id) ${id ? "WHERE gasto.id = ?" : "" } `;
 
-            //se hace la consulta, en el que selecciona la consulta y le indica que si hay id se seleccione y si no que ese valor sea nulo 
+            //Se hace la consulta, en la que se selecciona la consulta y se le indica que si hay un id especificado, se agregará a la consulta.
             let [resultado] = await conexion.query(consulta, id ? [id] : null);
           
-            //se cierra la conexion porque ya se ha usado y esta el resultado
+            //Se ejecuta la consulta y se cierra la conexión.
             conexion.close();
             callback([null, resultado]);
         }else{
-            //si tengo error se cumple la promesa,  pero indicando que hay un error en la base de datos
-            callback([{error : "error en la base de datos"}])
-        }
+            //El callback se ejecutará cuando se produzca un error en la base de datos.
+            callback([{error : "error en la base de datos"}]);
+        };
     });
 };
 
-//actualizarEstado solo recibe el id 
-export function actualizarEstado(id){
-    return new Promise( async callback => {
-        //se invoca la funcion conectar y depende de si conecta o no va hacia if o else 
-        let [error, conexion] = await conectar();
-
-        if(!error){
-            //se edita
-            let [resultado] = await conexion.query("UPDATE gasto SET terminada = NOT terminada WHERE id = ?", [id]);
-          
-            //se cierra la conexion pq ya se ha usado y esta el resultado
-            conexion.close();
-            callback([null, resultado]);
-        }else{
-            //si tengo error se cumple la promesa, indicando que hay un error en la base de datos
-            callback([{error : "error en la base de datos"}])
-        }
-    });
-};
-
-//borrar solo recibe el id 
+//Se utiliza para eliminar un registro de la base de datos. 
 export function borrar(id){
     return new Promise( async callback => {
-        //se invoca la funcion conectar con las dos posibilidades de error y conexion
-        //esta linea intenta conectarse y depende de si conecta o no va hacia if o else 
+        //Se invoca la función conectar() para establecer una conexión con la base de datos.
         let [error, conexion] = await conectar();
 
+        //En caso de que no haya error:
         if(!error){
-
-            //se edita
+            //Se ejecuta una consulta DELETE para eliminar el registro especificado por el parámetro id.
             let [resultado] = await conexion.query("DELETE FROM gasto WHERE id = ?", [id]);
           
-            //se cierra la conexion pq ya se ha usado y esta el resultado
+            //Se ejecuta la consulta y se cierra la conexión.
             conexion.close();
             callback([null, resultado]);
         }else{
-            //si tengo error se cumple la promesa, indicando que hay un error en la base de datos
-            callback([{error : "error en la base de datos"}])
+            //El callback se ejecutará cuando se produzca un error en la base de datos.
+            callback([{error : "error en la base de datos"}]);
         }
     });
 };
 
-//se le pasa el texto de la gasto
+//Se crea un nuevo registro en la db con los datos indicados.
 export function crear(datos){
     return new Promise( async callback => {
-        //se invoca la funcion conectar con las dos posibilidades de error y conexion
-        //esta linea intenta conectarse y depende de si conecta o no va hacia if o else 
+        //Se invoca la función conectar() para establecer una conexión con la base de datos.
         let [error, conexion] = await conectar();
 
+        //En caso de que no haya error:
         if(!error){
+            //Se asignan variables a los valores de un objeto llamado datos. La variable gasto se asigna al valor del objeto datos con la clave "gasto".
             const gasto = datos.gasto;
+            //La variable cantidad se asigna al valor del objeto datos con la clave "cantidad". 
             const cantidad = datos.cantidad;
+            //La variable id_usuario se asigna al valor del objeto datos con la clave "id_usuario".
             const id_usuario = datos.id_usuario;
 
-            //se hace la consulta, en el que se selecciona la gasto y en (?) iria el texto de la gasto que se incluye con  [gasto]
-            //NOW() --> obtiene la fecha actual de cuando de la base de datos
+            //Construye una consulta SQL para insertar los datos especificados en la tabla gasto            
+            //NOW() --> obtiene la fecha actual para añadirla a la base de datos
             let [resultado] = await conexion.query("INSERT INTO gasto (gasto, cantidad, id_usuario, fecha_gasto) VALUES (?,?,?,NOW() )", [gasto, cantidad, id_usuario]);
-          
             
-            //se cierra la conexion pq ya se ha usado y esta el resultado
+            //Se ejecuta la consulta y se cierra la conexión.
             conexion.close();
             callback([null, resultado]);
         }else{
-            //si tengo error se cumple la promesa, indicando que hay un error en la base de datos
-            callback([{error : "error en la base de datos"}])
-        }
+            //El callback se ejecutará cuando se produzca un error en la base de datos.
+            callback([{error : "error en la base de datos"}]);
+        };
     });
 };
 
-
+//Se utiliza para iniciar sesión en una aplicación. Luego, se recuperan los datos de usuario y contraseña del objeto "datos" 
 export function iniciarSesion(datos) {
     return new Promise( async callback =>  {
-        //se invoca la funcion conectar y depende de si conecta o no va hacia if o else 
+        //Se invoca la función conectar() para establecer una conexión con la base de datos.
         let [error, conexion] = await conectar();
 
+        //Se seleccionan los datos de usuario y contraseña del objeto "datos" 
         const usuario = datos.nombreUsuario;
         const password = datos.passwordUsuario;
 
+        //Realiza una consulta a la base de dats para verificar si el usuario existe.
         let [resultado] = await conexion.query(`SELECT * FROM usuarios WHERE usuario = '${usuario}' AND password = '${password}'` , [usuario, password]);
         console.log(datos.body)
 
+        //Si el resultado es mayor que cero, el callback devolverá los resultados
         if(resultado.length > 0 ){
-            callback([null, resultado])
+            callback([null, resultado]);
         }else{
-            callback([{error: "error de usuario y/o clave"}, null])
-        }
-
-    })
+            //El callback se ejecutará cuando se produzca un error en la base de datos.
+            callback([{error: "error de usuario y/o clave"}, null]);
+        };
+    });
 };
 
-
+//Lee los usuarios de la base de datos.
 export function leerUsuarios(){
     return new Promise( async callback => {
-        //se invoca la funcion conectar con las dos posibilidades de error y conexion; de esta forma logra conectarse a la db
+        //Se invoca la función conectar() para establecer una conexión con la base de datos.
         let [error, conexion] = await conectar();
 
-        //si no hay error:
+        //En caso de que no haya error:
         if(!error){
+            //Ejecuta una consulta para obtener los usuarios
             let consulta = `SELECT id, usuario FROM usuarios `;
 
+            //Ejecuta una consulta en una base de datos y almacena el resultado en la variable "resultado".
             let [resultado] = await conexion.query(consulta);
           
-            //se cierra la conexion porque ya se ha usado y esta el resultado
+            //Se ejecuta la consulta y se cierra la conexión.
             conexion.close();
             callback([null, resultado]);
         }else{
-            //si tengo error se cumple la promesa,  pero indicando que hay un error en la base de datos
-            callback([{error : "error en obtener usuarios"}])
-        }
+            //El callback se ejecutará cuando se produzca un error en la base de datos.
+            callback([{error : "error en obtener usuarios"}]);
+        };
     });
 };

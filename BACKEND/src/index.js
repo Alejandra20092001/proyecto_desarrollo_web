@@ -1,54 +1,58 @@
-//se incluye el modulo de express
-import express from "express"
+// Se importa el modulo de express y se la asigna a una variable llamada "express". Express es un marco web para Node.js que proporciona un conjunto de características para crear aplicaciones web y APIs.
+import express from "express";
 
-//se invoca el body-parser
+//El bodyParser es un módulo de Node.js que proporciona un middleware para analizar el cuerpo de la solicitud entrante y extraer los datos en formato JSON. Esto le permite a la aplicación manejar los datos de la solicitud entrante y usarlos para realizar cualquier acción necesaria.
 import bodyParser from "body-parser";
 
-//se importa la variable route, del archivo de gastos.routes.js
-import sitioRoute from "./routes/gastos.routes.js"
+//Esta línea de código importa el archivo gastos.routes.js desde la carpeta routes. El archivo gastos.routes.js tiene las rutas de la aplicación.
+import sitioRoute from "./routes/gastos.routes.js";
 
-// se invoca el express, llamandolo rutas
+// Se crea una variable llamada app, de la aplicación Express; de esta forma se invoca Express.
 const app = express();
 
-//esta constante muestra un mensaje en el que pone error, que aparecera cada vez que haya un error en el sistema
-const msgError = {resultado : "errorrr"};
+// Establece un objeto llamado msgError con una propiedad llamada resultado que contiene el valor "error". De esta forma cada vez que se produzca un error en la app, aparecera este mensaje en la consola.
+const msgError = { resultado: "error" };
 
-//con cors, se unen ambos front y back
+//Se configuran las dos rutas existentes que tienen puertos diferentes, para permitir el intercambio de datos entre los dos orígenes específicos. 
 app.use((peticion, respuesta, siguiente) => {
-    //se mete dentro de una misma constante las rutas tanto del front como del back
+    //Se establece dentro de una misma constante llamada "rutasOriginales", que contiene las rutas url tanto del front como del back
     const rutasOriginales = ['http://localhost:5173', 'http://localhost:3000'];
-    //
+
+    //Guarda los encabezados de origen de una solicitud en una variable llamada "originales".
     const originales = peticion.headers.origin;
-    //
-    if(rutasOriginales.includes(originales)) {
+
+    //Comprueba si el valor de la variable "rutasOriginales" contiene el valor de la variable "originales". Si es así, establece un encabezado HTTP llamado "Access-Control-Allow-Origin" con el valor de la variable "originales".
+    if (rutasOriginales.includes(originales)) {
         respuesta.setHeader('Access-Control-Allow-Origin', originales);
     };
+
+    ////Establece los encabezados Access-Control-Allow-Origin, Access-Control-Allow-Methods, Access-Control-Allow-Headers y Access-Control-Allow-Credentials para permitir que el navegador realice solicitudes CORS desde un origen específico.
     respuesta.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     respuesta.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     respuesta.setHeader('Access-Control-Allow-Credentials', 'true');
+    
+    //Esta función permite que el programa continue y realice la función especifica.
     siguiente();
 });
 
+// Usa el módulo bodyParser para analizar los datos JSON enviados en las solicitudes HTTP.
+app.use(bodyParser.json());
 
-// para cualquier peticion que entre con content-type
-app.use(bodyParser.json())
-
-//se le indica que la app use la funcion router() 
+//El metodo "use" de Express indica que todas las rutas, definidas en el archivo "sitioRoute", se deben usar para manejar las solicitudes entrantes.
 app.use(sitioRoute);
 
-
-// si a mi rutas se le hace cualquier tipo de peticion que no entre por las anteriores enviamos el mensaje error
-//¡¡CUALQUIER ERROR PASA POR AQUI!!
+//Esta función maneja los errores, y titne cuatro parametros: error, petición, respuesta y siguiente. La respuesta se convierte en un objeto JSON con el mensaje de error indicado anteriormente.
 app.use((error, peticion, respuesta, siguiente) => {
     // con el json se convierte en objeto json la respuesta
-    respuesta.json(msgError)
+    respuesta.json(msgError);
 });
 
 app.use((peticion, respuesta) => {
     // con el json se convierte en objeto json la respuesta
-    respuesta.json(msgError)
+    respuesta.json(msgError);
 });
 
-//el rutas en el puerto 3000
-app.listen(3000)
-console.log("servidor corriendo en 3000")
+//Le dice al servidor que escuche las solicitudes entrantes en el puerto 3000. Esto significa que cualquier solicitud entrante en ese puerto será manejada por el servidor.
+app.listen(3000);
+//Se muestra un mensaje en la consola para indicar que el servidor esta corriendo en el puerto 3000.
+console.log("Servidor corriendo en el puerto 3000");

@@ -1,19 +1,19 @@
-//se importa REACT
+//Se importa React,desde el paquete 'react'. 
 import React from "react";
 
-//se crea la funcion llamada Gasto
+//Se crea la función Gasto,que toma los parámetros de id, gasto, cantidad, usuario y fecha_gasto.
 function Gasto({ id, gasto, cantidad, usuario, fecha_gasto, onDelete}){
 
-    // Cambiar formato de fecha de Base de Datos a formato local
+    //Cambia el formato de fecha de la base de datos al formato local
     const procesarFecha = (fecha) => {
         const fechaProcesada = new Date(fecha);
         return fechaProcesada.toLocaleDateString();
-    }
+    };
 
-    // Función de Callback para eliminar un gasto desde App.jsx
+    //Función de Callback para eliminar un gasto desde App.jsx
     const handleDelete = (item) => {
-        onDelete(item)
-    } 
+        onDelete(item);
+    };
 
     return (
         <div className="gasto">
@@ -30,8 +30,8 @@ function Gasto({ id, gasto, cantidad, usuario, fecha_gasto, onDelete}){
                 </button>
             </div>
         </div>
-    )
-}
+    );
+};
 
-//se exporta Gasto
+//Se exporta la función Gasto
 export default Gasto

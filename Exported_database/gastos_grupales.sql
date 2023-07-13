@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-07-2023 a las 17:05:46
+-- Tiempo de generación: 13-07-2023 a las 09:56:41
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.0
 
@@ -40,8 +40,8 @@ CREATE TABLE `gasto` (
 --
 
 INSERT INTO `gasto` (`id`, `gasto`, `cantidad`, `id_usuario`, `fecha_gasto`) VALUES
-(22, 'Sillas', 56, 2, '2023-07-04 14:46:18'),
-(27, 'flores', 12, 1, '2023-07-04 16:57:44');
+(43, 'Sillas', 245, 2, '2023-07-07 19:00:17'),
+(44, 'Billetes de avión', 326, 2, '2023-07-09 17:46:38');
 
 -- --------------------------------------------------------
 
@@ -60,9 +60,9 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `usuario`, `password`) VALUES
-(1, 'Laura', '1234'),
-(2, 'Juan', '1234'),
-(3, 'Enrique', '1234');
+(1, 'Laura', '12L34'),
+(2, 'Juan', '43J21'),
+(3, 'Enrique', '56E78');
 
 --
 -- Índices para tablas volcadas
@@ -88,7 +88,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `gasto`
 --
 ALTER TABLE `gasto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
