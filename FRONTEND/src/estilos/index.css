@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-};
+}
 
 :root{
   /* TIPOGRAFIA */
@@ -17,18 +17,18 @@
   --blanco: rgb(245, 243, 243);
   --principal: #736CED; 
   --secundario: #9F9FED;
-};
+}
 
 
 body{
   font-family: var(--font-family);
-};
+}
 
 section{
   background-color: var(--secundario);
   margin: 20px;
   padding: 20px;
-};
+}
 button{
   border: none;
   padding: 10px;
@@ -36,33 +36,33 @@ button{
   border-radius: 8px;
   font-weight: var(--regular);
   color: var(--negro);
-};
+}
 
 header {
   background-color: var(--principal);
   padding: 10px;
-};
+}
 
 input{
   padding: 10px;
   border: none;
   border-radius: 8px;
-};
+}
 
 input[type=submit]{
   transition:  background-color 1s, shadow 1s, color 1s, font-weight 0.5s;
   cursor: pointer;
-};
+}
 input:hover[type=submit]{
   background-color: var(--principal);
   box-shadow:1px 1px 3px var(--blanco);
   color: var(--blanco);
   font-weight: bold;
-};
+}
 
 p{
   font-weight: var(--thin);
-};
+}
 
 /* SESIONES */
   form.inicioSesion{
@@ -70,19 +70,19 @@ p{
     flex-direction: column;
     align-items:flex-start;
     gap: 10px;
-  };
+  }
   nav{
     display: flex;
     margin: auto; 
     align-items: center ;
     justify-content: space-between; 
     color: var(--negro);
-  };
+  }
   h1{
     font-size: 2rem; 
     font-weight: var(--bold); 
     color: var(--blanco);
-  };
+  }
   
 
 /* FORMULARIO NUEVO GASTO */
@@ -92,16 +92,16 @@ p{
     gap: 10px;
     padding: 10px;
     border: none;
-  };
+  }
   form.formularioNuevoGasto div{
     padding: 5px;
-  };
+  }
   form.formularioNuevoGasto select{
     border: none;
     padding: 3px;
     border-radius: 8px;
     color: grey;
-  };
+  }
 
 /* GASTOS */
   div.gasto{
@@ -111,13 +111,13 @@ p{
     margin: 10px;
     padding: 10px;
     background-color: var(--blanco);
-  };
+  }
   
   .gasto h2{
     font-weight: var(--semibold);
     font-size: 1rem;
     border-bottom: 2px solid var(--principal);
-  };
+  }
 
   .gasto .texto{
     display: flex;
@@ -125,62 +125,62 @@ p{
     justify-content: space-around;
     flex-direction: column;
     gap: 10px;
-  };
+  }
 
   .gasto h3.fecha_gasto{
     font-weight: var(--thin);
-  };
+  }
 
   .gasto p{
     font-weight: var(--regular);
-  };
+  }
 
   /* BOTON PAGADO (borra gasto) */
     .gasto button{
       background-color: var(--principal);
       cursor: pointer;
       color: #f3f0f0;
-    };
+    }
 
 
-  /* CREACION DE DISEÑOS RESPONSIVES */
+/* CREACION DE DISEÑOS RESPONSIVES */
   /* =============================================================================
       768px MOVIL
   =============================================================================*/
   @media screen and (min-width:768px) {
     
-  };
+  }
   /* =============================================================================
       992px TABLET
   =============================================================================*/
   @media screen and (min-width:992px) {
     form.formularioNuevoGasto{
       grid-template-columns: 1fr 1fr 1fr;
-    };
+    }
 
     form.formularioNuevoGasto input[type=submit]{
       grid-column: 3;
-    };
+    }
     
     .gasto .texto{
       justify-content: space-evenly;
       align-items: center;
       flex-direction: row;
-    };
-  };
+    }
+  }
   /* =============================================================================
       1200px ORDENADOR
   =============================================================================*/
   @media screen and (min-width:1200px) {
     form.formularioNuevoGasto{
       grid-template-columns: 1fr 1fr 1fr 1fr;
-    };
+    }
 
     form.formularioNuevoGasto input[type=submit]{
       grid-column: 4;
-    };
+    }
 
     section.deudaFinal p{
       text-align: center;
-    };
-  };
+    }
+  }
